@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 
+
 import com.rmi.client.inter.RMIClientInter;
 import com.rmi.domain.Message;
 import com.rmi.domain.User;
@@ -82,6 +83,7 @@ public class RMIServerImp extends UnicastRemoteObject implements RMIServerInter 
 		}
 		if (!al.isEmpty()) {
 			int size = al.size();
+			//System.out.println(size);
 			users = new User[size];
 			for (int i = 0; i < size; i++) {
 				users[i] = (User) al.get(i);
@@ -178,34 +180,31 @@ public class RMIServerImp extends UnicastRemoteObject implements RMIServerInter 
 			if (rs.next()) {
 				int count = rs.getInt(1);
 				if (count == 2) {
-					if (userService.deleteFriend(uid, fid)) {
+					//if (userService.deleteFriend(uid, fid)) {
 						if (userService.addFriend(uid, fid)) {
-							RMIClientInter client = (RMIClientInter) clientList
-									.get(uid);
+							
+							RMIClientInter client = (RMIClientInter) clientList.get(uid);
+							
 							if (client != null) {
 								User user = userService.getUserById(fid);
 								user.setOnline(clientList.get(fid) != null);
 								client.addUser(user);
-								friends.put(uid,
-										userService.getAllFriendsID(uid));
+								friends.put(uid,userService.getAllFriendsID(uid));
 							}
-							client = null;
-							client = (RMIClientInter) clientList.get(fid);
+							RMIClientInter client2 = null;
+							client2 = (RMIClientInter) clientList.get(fid);
 							if (client != null) {
 								User user = userService.getUserById(uid);
 								user.setOnline(clientList.get(uid) != null);
-								client.addUser(user);
-								friends.put(fid,
-										userService.getAllFriendsID(fid));
+								client2.addUser(user);
+								friends.put(fid,userService.getAllFriendsID(fid));
 							}
 							result = true;
-						} else {
-							System.err
-									.println("Failed: UserService.addFriend(uid, fid)!");
-						}
+						//} else {
+							//System.err.println("Failed: UserService.addFriend(uid, fid)!");
+						//}
 					} else {
-						System.err
-								.println("Failed: UserService.deleteFriend(uid, fid)!");
+						System.err.println("Failed: UserService.deleteFriend(uid, fid)!");
 					}
 				}
 			}
@@ -231,7 +230,7 @@ public class RMIServerImp extends UnicastRemoteObject implements RMIServerInter 
 				RMIClientInter client = clientList.get(toID);
 				client.sendMessage(fromID, message);
 				//save message into database
-				userService.saveMessage(fromID, toID, message, "1");
+				//userService.saveMessage(fromID, toID, message, "1");
 			}else{
 				//the user is offline
 				userService.saveMessage(fromID, toID, message, "0");
@@ -271,6 +270,14 @@ public class RMIServerImp extends UnicastRemoteObject implements RMIServerInter 
 			}
 		}
 		return users;
+	}
+
+	@Override
+	public boolean isFriend(String youId, String fid) throws RemoteException {
+		// TODO Auto-generated method stub
+		UserService userService = new UserService();
+		
+		return userService.isFriend(youId, fid);
 	}
 
 }

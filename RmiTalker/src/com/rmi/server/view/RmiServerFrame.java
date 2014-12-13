@@ -27,7 +27,6 @@ import javax.swing.ListSelectionModel;
 
 import com.rmi.domain.User;
 import com.rmi.server.imp.RMIServerImp;
-import com.rmi.server.model.RMISever;
 import com.rmi.server.model.UserService;
 import com.rmi.server.tools.MyTable;
 
@@ -109,8 +108,8 @@ public class RmiServerFrame {
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-				RMISever rmiServer = new RMISever();
-				textField_ServerIp.setText(rmiServer.getHostIp());
+				
+				//textField_ServerIp.setText(rmiServer.getHostIp());
 				// System.out.println(rmiServer.getHostIp());
 			}
 		});

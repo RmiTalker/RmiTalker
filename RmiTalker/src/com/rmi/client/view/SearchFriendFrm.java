@@ -75,8 +75,8 @@ public class SearchFriendFrm extends JFrame implements ActionListener {
 		btnAdd.setFont(font);
 		btnAdd.setBackground(c1);
 		btnAdd.setForeground(fcolor);
-		btnAdd.setBounds(190,225,90,25);
-		btnQuit.setBounds(290,225,60,25);
+		btnAdd.setBounds(190,225,80,25);
+		btnQuit.setBounds(285,225,80,25);
 		container.add(txtID);
 		container.add(btnSearch);
 		container.add(btnQuit);
@@ -157,8 +157,12 @@ public class SearchFriendFrm extends JFrame implements ActionListener {
 			if(row<0) return;
 			String id=(String)tm.getValueAt(row, 0);
 			try {
-				server.addFriend(this.uid, id);
-				JOptionPane.showMessageDialog(this, "A new friend "+id+" has been added successfully!");
+				if(server.isFriend(this.uid, id)){
+					JOptionPane.showMessageDialog(this,"Sorry, "+id+" was already your friend!");
+				}else{
+					server.addFriend(this.uid, id);
+					JOptionPane.showMessageDialog(this, "A new friend "+id+" has been added successfully!");
+				}
 			//	scrollPane.updateUserlist(server.getAllFriends(this.id));
 			} catch (RemoteException e1) {
 				// TODO Auto-generated catch block

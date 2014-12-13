@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -40,6 +41,8 @@ public class UserListPane extends JScrollPane {
 	String uid;
 
 	RMIServerInter server;
+	
+	private ImageIcon img;
 
 	public UserListPane(String uid, RMIServerInter server) {
 		//get user number
@@ -57,7 +60,9 @@ public class UserListPane extends JScrollPane {
 		JPanel setupPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		setupPane.setBackground(bgc);
 		JButton btnAdd = new JButton();
-		btnAdd.setIcon(new ImageIcon("images/search.png"));
+		img = new ImageIcon("images/search-group.png");
+		img.setImage(img.getImage().getScaledInstance(48,48,Image.SCALE_DEFAULT));
+		btnAdd.setIcon(img);
 		btnAdd.setBorder(BorderFactory.createEmptyBorder());
 		setupPane.add(btnAdd);
 		contentPane.setBorder(BorderFactory.createLineBorder(bgc, 20));

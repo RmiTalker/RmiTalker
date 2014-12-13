@@ -20,11 +20,6 @@ import javax.swing.JTextField;
 import com.rmi.domain.User;
 import com.rmi.server.inter.RMIServerInter;
 import java.awt.SystemColor;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.MatteBorder;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 
@@ -53,27 +48,27 @@ public class RegisterFrm extends JFrame implements ActionListener{
 		JLabel lblid=new JLabel("User Number");
 		//lblid.setForeground(fcolor);
 		//lblid.setFont(font);
-		lblid.setBounds(49,39,66,25);
+		lblid.setBounds(37,39,85,25);
 		JLabel lblname=new JLabel("Your Name");
 		//lblname.setForeground(fcolor);
 		//lblname.setFont(font);
-		lblname.setBounds(49,74,60,25);
+		lblname.setBounds(37,75,85,25);
 		JLabel lblrealname=new JLabel("Realname");
-		lblrealname.setBounds(49,180,50,25);
+		lblrealname.setBounds(37,180,85,25);
 		//lblrealname.setForeground(fcolor);
 		//lblrealname.setFont(font);
 		JLabel lblsex=new JLabel("Gender");
 		//lblsex.setForeground(fcolor);
 		//lblsex.setFont(font);
-		lblsex.setBounds(49,215,36,25);
+		lblsex.setBounds(37,214,85,25);
 		JLabel lblpwd=new JLabel("Password");
 		//lblpwd.setForeground(fcolor);
 		//lblpwd.setFont(font);
-		lblpwd.setBounds(49,110,50,25);
+		lblpwd.setBounds(37,110,85,25);
 		JLabel lblrepwd=new JLabel("Re-enter");
 		//lblrepwd.setForeground(fcolor);
 		//lblrepwd.setFont(font);
-		lblrepwd.setBounds(49,145,50,25);
+		lblrepwd.setBounds(37,145,85,25);
 		
 		txtid=new JTextField();
 		txtid.setEnabled(false);

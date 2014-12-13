@@ -40,7 +40,7 @@ public class RmiClientLogin {
 	
 	static{
 		try{
-		icon = new ImageIcon("images/rmitalker.jpg").getImage();
+		icon = new ImageIcon("images/rmitalker.png").getImage();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -89,8 +89,7 @@ public class RmiClientLogin {
 		frmRmitalkerLogin.setResizable(false);
 		frmRmitalkerLogin.setVisible(true);
 		frmRmitalkerLogin.setTitle("RmiTalker Login");
-		frmRmitalkerLogin.setIconImage((new ImageIcon("images/rmitalker.jpg")
-				.getImage()));
+		frmRmitalkerLogin.setIconImage(icon);
 		frmRmitalkerLogin.setBounds(100, 100, 340, 256);
 		frmRmitalkerLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmRmitalkerLogin.getContentPane().setLayout(new BorderLayout(0, 0));

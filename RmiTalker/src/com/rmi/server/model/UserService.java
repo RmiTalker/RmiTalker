@@ -11,6 +11,24 @@ import com.rmi.server.dao.SqlHelper;
 import com.rmi.server.tools.uidGenerator;
 
 public class UserService {
+	
+	public boolean isFriend(String youId, String fid){
+		
+		String sql = "select * from relation where uid=? and fid=?";
+		String[] parameters = { youId, fid };
+		ResultSet rs = SqlHelper.executeQuery(sql, parameters);
+		try {
+			if (rs.next()) {
+				return true;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			SqlHelper.close(rs, SqlHelper.getPs(), SqlHelper.getct());
+		}
+		return false;
+	}
 
 	public boolean checkUser(User user) {
 		boolean flag = false;
@@ -41,7 +59,7 @@ public class UserService {
 		String time = df.format(date);
 
 		// handle with user sex
-		String sql = "insert into users(uid,password,name,realname,sex,time) values(?,?,?,?,?,?)";
+		String sql = "insert into users(uid,password,name,realname,sex,status,time) values(?,?,?,?,?,1,?)";
 		String parameters[] = { uid, user.getPassword(), user.getName(),
 				user.getRealname(), user.getSex()+"", time };
 		try {
@@ -208,7 +226,7 @@ public class UserService {
 	
 	public ArrayList<Message> getAllUnReadMsg(String uid){
 		ArrayList<Message> al = new ArrayList<>();
-		String sql = "select 'from','to',message,send_date from message where isread=0 and 'to'=? order by send_date";
+		String sql = "select `from`,`to`,message,send_date from message where isread=0 and `to`=? order by send_date";
 		String parameters[] = {uid};
 		ResultSet rs = SqlHelper.executeQuery(sql, parameters);
 		try {

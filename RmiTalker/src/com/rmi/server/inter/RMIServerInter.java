@@ -46,5 +46,10 @@ public interface RMIServerInter extends Remote {
 	
 	//get all users to add friend
 	public User[] getAllUsers()throws RemoteException;
+	
+	//whether is a friend
+	
+	public boolean isFriend(String youId, String fid) throws RemoteException;
+	
 
 }
