@@ -19,6 +19,16 @@ public class User implements Serializable {
 	private String time;
 	
 	private boolean online;
+	
+	private String message=null;
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 	public boolean getOnline() {
 		return online;

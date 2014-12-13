@@ -48,7 +48,7 @@ public class SqlHelper {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				System.out.println("get connection: ok");
+				//System.out.println("get connection: ok");
 				return ct;
 			}
 

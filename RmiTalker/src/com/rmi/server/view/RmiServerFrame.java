@@ -26,12 +26,18 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.ListSelectionModel;
 
 import com.rmi.domain.User;
+import com.rmi.server.imp.RMIServerImp;
 import com.rmi.server.model.RMISever;
 import com.rmi.server.model.UserService;
 import com.rmi.server.tools.MyTable;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.net.InetAddress;
+import java.rmi.Naming;
+import java.rmi.NoSuchObjectException;
+import java.rmi.Remote;
+import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -48,19 +54,26 @@ public class RmiServerFrame {
 
 	private JFrame frame;
 	private JTextField textField_ServerIp;
-	private JTextField textField_Port;
+	JTextField textField_Port;
 	private MyTable table_ative;
 	private String columns[] = { "ID", "Name", "Realname", "Gender" };
 	private String columns_register[] = { "ID", "Name", "Realname", "Gender",
 			"Registration Time" };
-	//private Object rows[][] = { { "1", "sam", "wangzhenyu", "M" },
-			//{ "2", "judy", "xinfeng", "F" } };
+	// private Object rows[][] = { { "1", "sam", "wangzhenyu", "M" },
+	// { "2", "judy", "xinfeng", "F" } };
 	private JTable table_register;
 	private JTabbedPane tabbedPane;
 	private JLabel lblTip;
 	private JLabel lblServerIp;
 	private DefaultTableModel model2;
 	private DefaultTableModel model;
+	private JButton btnStart;
+	private Thread thread;
+	Remote reg = null;
+	static String host="";
+	String port="9999";
+	
+	static RMIServerImp serverImp = null;
 
 	/**
 	 * Launch the application.
@@ -69,6 +82,8 @@ public class RmiServerFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					serverImp=new RMIServerImp();
+					host+=InetAddress.getLocalHost().getHostAddress();
 					RmiServerFrame window = new RmiServerFrame();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
@@ -95,7 +110,7 @@ public class RmiServerFrame {
 			public void windowOpened(WindowEvent e) {
 				RMISever rmiServer = new RMISever();
 				textField_ServerIp.setText(rmiServer.getHostIp());
-				//System.out.println(rmiServer.getHostIp());
+				// System.out.println(rmiServer.getHostIp());
 			}
 		});
 		frame.setBounds(100, 100, 650, 500);
@@ -106,11 +121,16 @@ public class RmiServerFrame {
 		JPanel panel_Up = new JPanel();
 		frame.getContentPane().add(panel_Up, BorderLayout.NORTH);
 
-		JButton btnStart = new JButton("Start");
+		btnStart = new JButton("Start");
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setTip("Start server...", "ok");
-				textField_Port.setEditable(false);
+
+				btnStart.setEnabled(false);
+
+				thread = new Listener(RmiServerFrame.this, RmiServerFrame.serverImp);
+				thread.start();
+
+				
 			}
 		});
 		btnStart.setFocusPainted(false);
@@ -119,7 +139,9 @@ public class RmiServerFrame {
 		JButton btnStop = new JButton("Stop");
 		btnStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setTip("Server closed", "err");
+				CloseRMIServer();
+				btnStart.setEnabled(true);
+				//setTip("Server closed", "err");
 				textField_Port.setEditable(true);
 			}
 		});
@@ -213,13 +235,7 @@ public class RmiServerFrame {
 		lblServerIp = new JLabel("Server IP:");
 		panel_down.add(lblServerIp);
 
-		textField_ServerIp = new JTextField();
-		textField_ServerIp.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				RMISever rmiServer = new RMISever();
-				lblServerIp.setText(rmiServer.getHostIp());
-			}
-		});
+		textField_ServerIp = new JTextField(host);		
 		textField_ServerIp.setEditable(false);
 		panel_down.add(textField_ServerIp);
 		textField_ServerIp.setColumns(15);
@@ -235,6 +251,7 @@ public class RmiServerFrame {
 		JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				RmiServerFrame.this.port = RmiServerFrame.this.textField_Port.getText();
 				textField_Port.setEditable(false);
 			}
 		});
@@ -247,6 +264,7 @@ public class RmiServerFrame {
 		panel_down.add(lblTip);
 	}
 
+	/********************************************************************/
 	public void setTip(String tip, String type) {
 		lblTip.setText(tip);
 		if (type.equals("ok")) {
@@ -263,9 +281,10 @@ public class RmiServerFrame {
 	public String getPort() {
 		return textField_Port.getText();
 	}
-	
-	public void addOnlineUser(User user){
-		if(user==null) return;
+
+	public void addOnlineUser(User user) {
+		if (user == null)
+			return;
 		Object[] o = new Object[4];
 		o[0] = user.getUserId();
 		o[1] = user.getName();
@@ -275,20 +294,88 @@ public class RmiServerFrame {
 		} else {
 			o[3] = 'F';
 		}
-		model.addRow(o);		
+		model.addRow(o);
 	}
-	
-	public void removeOnlineUser(String uid){
-		if(uid==null||uid=="") return;
-		
-		Vector v=model.getDataVector();
-		int size=v.size();
-		for(int i=0;i<size;i++){
-			if(((Vector)v.elementAt(i)).elementAt(0).toString().equals(uid)){
+
+	public void removeOnlineUser(String uid) {
+		if (uid == null || uid == "")
+			return;
+
+		Vector v = model.getDataVector();
+		int size = v.size();
+		for (int i = 0; i < size; i++) {
+			if (((Vector) v.elementAt(i)).elementAt(0).toString().equals(uid)) {
 				v.remove(i);
 				break;
 			}
 		}
 		model.fireTableDataChanged();
 	}
+
+	public void updateUsers(ArrayList<User> users) {
+		if (users == null)
+			return;
+		model2.setRowCount(0);
+		for (int i = 0; i < users.size(); i++) {
+			Object[] o = new Object[5];
+			o[0] = users.get(i).getUserId();
+			o[1] = users.get(i).getName();
+			o[2] = users.get(i).getRealname();
+			if (users.get(i).getSex() == 1) {
+				o[3] = 'M';
+			} else {
+				o[3] = 'F';
+			}
+			o[4] = users.get(i).getTime();
+			model2.addRow(o);
+		}
+	}
+
+	public void CloseRMIServer(){
+		try {
+			if(reg!=null){
+				java.rmi.server.UnicastRemoteObject.unexportObject(reg, true);
+				setTip("Server closed", "err");
+				//System.out.println("releasing port... ");
+			}
+			else{
+				setTip("Server has not been started yet!","err");
+			}
+				
+		} catch (NoSuchObjectException e) {
+			e.printStackTrace();
+		}
+		reg = null;
+	}
+}
+
+class Listener extends Thread {
+	public Listener() {
+
+	}
+	private RmiServerFrame frame;
+	private RMIServerImp server;
+	
+	
+	public Listener(RmiServerFrame frame,RMIServerImp server){
+		this.frame=frame;
+		this.server=server;
+	}
+	public void run() {
+		try {
+			if(server==null||frame==null) return;
+			server.setFrame(frame);
+			frame.reg = LocateRegistry.createRegistry(Integer.parseInt(frame.port));
+			Naming.rebind("rmi://"+RmiServerFrame.host+":"+frame.port+"/server", server);
+			frame.setTip("Start server...", "ok");
+			frame.textField_Port.setEditable(false);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			frame.setTip("Failed: Start server!", "err");
+		}
+	}
+	
+	
+	
 }

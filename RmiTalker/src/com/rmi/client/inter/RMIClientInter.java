@@ -10,17 +10,17 @@ public interface RMIClientInter extends Remote {
 	// receive friends list
 	public boolean sendFriendlist(User[] users) throws RemoteException;
 
-	// 接受好友消息
-	public boolean sendMessage(String id, String message)
+	// receive message
+	public boolean sendMessage(String uid, String message)
 			throws RemoteException;
 
-	// 接受服务器的断开消息
+	// receive the server shut down
 	public void serverShutup() throws RemoteException;
 
-	// 号码重复登录
+	// the user number re-login
 	public void IDReLogin() throws RemoteException;
 
-	// 添加好友到列表中
+	// add friend
 	public void addUser(User user) throws RemoteException;
 
 }
