@@ -144,6 +144,7 @@ public class RmiServerFrame {
 				btnStart.setEnabled(true);
 				btnSave.setEnabled(true);
 				//setTip("Server closed", "err");
+				model.setRowCount(0);
 				textField_Port.setEditable(true);
 			}
 		});

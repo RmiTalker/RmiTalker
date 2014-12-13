@@ -84,7 +84,7 @@ public class RegisterFrm extends JFrame implements ActionListener{
 		cmbSex.addItem("M");
 		cmbSex.addItem("F");
 		//cmbSex.setBackground(Color.white);
-		cmbSex.setBounds(125,214,50,25);
+		cmbSex.setBounds(125,214,71,25);
 		txtpwd=new JPasswordField();
 		txtpwd.setBounds(125,109,145,25);
 		txtrepwd=new JPasswordField();
