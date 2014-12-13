@@ -134,7 +134,8 @@ public class UserListPane extends JScrollPane {
 			if (user.getUserId().toString().equals(from)) {
 				String s=user.getMessage();
 				s=(s==null?"":s);
-				s+=from+": "+message+"\n\r";
+				
+				s+=user.getName()+":\n "+message+"\n\r";
 				user.setMessage(s);
 				model.remove(i);
 				model.add(i, user);

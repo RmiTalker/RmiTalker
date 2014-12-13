@@ -13,10 +13,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.BevelBorder;
 
+import com.rmi.domain.User;
 import com.rmi.server.inter.RMIServerInter;
+
 import java.awt.SystemColor;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.rmi.RemoteException;
+
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.SoftBevelBorder;
 
@@ -126,11 +130,27 @@ public class Conversation extends JFrame implements ActionListener {
 		//this.setTitle("You ("+from+") are talking with " + to);
 		if (!send) {
 			txtMsg.setEditable(false);
-			this.setTitle("You ("+to+") receive a " + from+" message");
-			//this.txtMsg.setText(this.msg);
-			this.txtMsg.append(this.msg);
+			try {
+				User u = this.server.getUserById(to);
+				User u2 = this.server.getUserById(from);
+				this.setTitle("You ("+u.getName()+") receive a " + u2.getName()+" message");
+				//this.txtMsg.setText(this.msg);
+				this.txtMsg.append(this.msg);
+				
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		} else {
-			this.setTitle("You ("+from+") are talking with " + to);
+			try {
+				User u = this.server.getUserById(to);
+				User u2 = this.server.getUserById(from);
+				this.setTitle("You ("+u2.getName()+") are talking with " + u.getName());
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}				
 		}
 		
 		this.setSize(410, 300);
@@ -172,12 +192,14 @@ public class Conversation extends JFrame implements ActionListener {
 						
 						if (send) {
 							this.server.sendMessage(from, to, msg);
-							String message = from + ":\n"+msg+"\n";
+							User u = this.server.getUserById(from);
+							String message = u.getName() + ":\n"+msg+"\n\r";
 							this.txtMsg.append(message);
 							this.textArea_Input.setText("");
 						} else {
 							server.sendMessage(to, from, msg);
-							String message = to + ":\n"+msg+"\n";
+							User u = this.server.getUserById(to);
+							String message = u.getName() + ":\n"+msg+"\n\r";
 							this.txtMsg.append(message);
 							this.textArea_Input.setText("");
 						}

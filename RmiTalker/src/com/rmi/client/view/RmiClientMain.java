@@ -57,6 +57,7 @@ public class RmiClientMain extends JFrame{
 		User user;
 		try {
 			user = s.getUserById(uid);
+			
 			if(user.getSex()==1){
 				imageurl="images/boy.jpg";
 			}else{
