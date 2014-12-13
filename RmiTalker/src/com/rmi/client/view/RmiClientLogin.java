@@ -149,6 +149,25 @@ public class RmiClientLogin {
 		textField.setColumns(4);
 
 		JButton btnRegister = new JButton("Register");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					RMIServerInter rmiServer = (RMIServerInter) Naming.lookup("rmi://"+ server_ip + ":" + port + "/server");
+					if (rmiServer != null) {
+						RegisterFrm register=new RegisterFrm(rmiServer);
+						register.setVisible(true);
+					}else{
+						JOptionPane.showMessageDialog(frmRmitalkerLogin, "The server could not be contacted. The computer is either offline or the servers are down. Try again later.",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					}
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(frmRmitalkerLogin, "The server could not be contacted. The computer is either offline or the servers are down. Try again later.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+					ex.printStackTrace();
+					//frmRmitalkerLogin.dispose();
+				}
+			}
+		});
 		btnRegister.setFocusPainted(false);
 		panel.add(btnRegister);
 

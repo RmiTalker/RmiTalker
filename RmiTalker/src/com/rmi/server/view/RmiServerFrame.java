@@ -68,6 +68,7 @@ public class RmiServerFrame {
 	private DefaultTableModel model2;
 	private DefaultTableModel model;
 	private JButton btnStart;
+	private JButton btnSave;
 	private Thread thread;
 	Remote reg = null;
 	static String host="";
@@ -126,6 +127,7 @@ public class RmiServerFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				btnStart.setEnabled(false);
+				btnSave.setEnabled(false);
 
 				thread = new Listener(RmiServerFrame.this, RmiServerFrame.serverImp);
 				thread.start();
@@ -141,6 +143,7 @@ public class RmiServerFrame {
 			public void actionPerformed(ActionEvent e) {
 				CloseRMIServer();
 				btnStart.setEnabled(true);
+				btnSave.setEnabled(true);
 				//setTip("Server closed", "err");
 				textField_Port.setEditable(true);
 			}
@@ -248,7 +251,7 @@ public class RmiServerFrame {
 		panel_down.add(textField_Port);
 		textField_Port.setColumns(6);
 
-		JButton btnSave = new JButton("Save");
+		btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RmiServerFrame.this.port = RmiServerFrame.this.textField_Port.getText();

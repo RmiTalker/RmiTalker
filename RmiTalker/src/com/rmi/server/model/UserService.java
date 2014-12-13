@@ -41,15 +41,9 @@ public class UserService {
 		String time = df.format(date);
 
 		// handle with user sex
-		String sex = null;
-		if (user.getSex() == 1)
-			sex = "M";
-		else
-			sex = "F";
-
 		String sql = "insert into users(uid,password,name,realname,sex,time) values(?,?,?,?,?,?)";
 		String parameters[] = { uid, user.getPassword(), user.getName(),
-				user.getRealname(), sex, time };
+				user.getRealname(), user.getSex()+"", time };
 		try {
 			SqlHelper.executeUpdate(sql, parameters);
 
