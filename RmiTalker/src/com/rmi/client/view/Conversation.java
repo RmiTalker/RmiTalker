@@ -64,7 +64,7 @@ public class Conversation extends JFrame implements ActionListener {
 
 		if (msg == null)
 			send = true;
-		//Font font = new Font("кн", Font.PLAIN, 12);
+		//Font font = new Font("О©╫О©╫", Font.PLAIN, 12);
 		//Color fcolor=new Color(13, 55, 85);
 		//Color c1=new Color(241, 250, 255);
 		Container container = getContentPane();
@@ -133,7 +133,7 @@ public class Conversation extends JFrame implements ActionListener {
 			try {
 				User u = this.server.getUserById(to);
 				User u2 = this.server.getUserById(from);
-				this.setTitle("You ("+u.getName()+") receive a " + u2.getName()+" message");
+				this.setTitle("You ("+u.getName()+") receive a message from" + u2.getName());
 				//this.txtMsg.setText(this.msg);
 				this.txtMsg.append(this.msg);
 				
